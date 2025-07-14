@@ -1,0 +1,28 @@
+FROM golang:1.24-alpine
+
+WORKDIR /app
+
+# Install Goose
+RUN go install github.com/pressly/goose/v3/cmd/goose@latest
+
+# Copy migration files
+COPY db/migrations ./db/migrations
+
+# Copy go mod files for any custom migration functions
+COPY go.mod go.sum ./
+
+# Create migration script
+RUN echo '#!/bin/sh' > /app/run-migrations.sh && \
+    echo 'echo "Waiting for database to be ready..."' >> /app/run-migrations.sh && \
+    echo 'until pg_isready -h postgres -p 5432 -U gateway_user; do' >> /app/run-migrations.sh && \
+    echo '  sleep 2' >> /app/run-migrations.sh && \
+    echo 'done' >> /app/run-migrations.sh && \
+    echo 'echo "Running migrations..."' >> /app/run-migrations.sh && \
+    echo 'goose -dir db/migrations postgres "$DSN" up' >> /app/run-migrations.sh && \
+    echo 'echo "Migrations completed successfully"' >> /app/run-migrations.sh && \
+    chmod +x /app/run-migrations.sh
+
+# Install PostgreSQL client for health checks
+RUN apk add --no-cache postgresql-client
+
+CMD ["/app/run-migrations.sh"] 

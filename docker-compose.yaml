@@ -1,0 +1,425 @@
+version: '3.8'
+
+services:
+  migrations:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile.migrations
+    environment:
+      - DSN=postgres://gateway_user:gateway_password@postgres:5432/gateway_db?sslmode=disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  gateway:
+    build: ./gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - DSN=postgres://gateway_user:gateway_password@postgres:5432/gateway_db?sslmode=disable
+      - NUM_STORAGE_INSTANCES=10
+    depends_on:
+      migrations:
+        condition: service_completed_successfully
+      postgres:
+        condition: service_healthy
+      storage-1:
+        condition: service_healthy
+      storage-2:
+        condition: service_healthy
+      storage-3:
+        condition: service_healthy
+      storage-4:
+        condition: service_healthy
+      storage-5:
+        condition: service_healthy
+      storage-6:
+        condition: service_healthy
+      storage-7:
+        condition: service_healthy
+      storage-8:
+        condition: service_healthy
+      storage-9:
+        condition: service_healthy
+      storage-10:
+        condition: service_healthy
+
+  storage-1:
+    build: ./storage
+    environment:
+      - MINIO_ENDPOINT=minio-1:9000
+      - MINIO_ACCESS_KEY_ID=minioadmin
+      - MINIO_SECRET_ACCESS_KEY=minioadmin
+      - MINIO_BUCKET=chunks
+      - HTTP_PORT=8081
+      - GRPC_PORT=9090
+    depends_on:
+      minio-1:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  storage-2:
+    build: ./storage
+    environment:
+      - MINIO_ENDPOINT=minio-2:9000
+      - MINIO_ACCESS_KEY_ID=minioadmin
+      - MINIO_SECRET_ACCESS_KEY=minioadmin
+      - MINIO_BUCKET=chunks
+      - HTTP_PORT=8081
+      - GRPC_PORT=9090
+    depends_on:
+      minio-2:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  storage-3:
+    build: ./storage
+    environment:
+      - MINIO_ENDPOINT=minio-3:9000
+      - MINIO_ACCESS_KEY_ID=minioadmin
+      - MINIO_SECRET_ACCESS_KEY=minioadmin
+      - MINIO_BUCKET=chunks
+      - HTTP_PORT=8081
+      - GRPC_PORT=9090
+    depends_on:
+      minio-3:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  storage-4:
+    build: ./storage
+    environment:
+      - MINIO_ENDPOINT=minio-4:9000
+      - MINIO_ACCESS_KEY_ID=minioadmin
+      - MINIO_SECRET_ACCESS_KEY=minioadmin
+      - MINIO_BUCKET=chunks
+      - HTTP_PORT=8081
+      - GRPC_PORT=9090
+    depends_on:
+      minio-4:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  storage-5:
+    build: ./storage
+    environment:
+      - MINIO_ENDPOINT=minio-5:9000
+      - MINIO_ACCESS_KEY_ID=minioadmin
+      - MINIO_SECRET_ACCESS_KEY=minioadmin
+      - MINIO_BUCKET=chunks
+      - HTTP_PORT=8081
+      - GRPC_PORT=9090
+    depends_on:
+      minio-5:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  storage-6:
+    build: ./storage
+    environment:
+      - MINIO_ENDPOINT=minio-6:9000
+      - MINIO_ACCESS_KEY_ID=minioadmin
+      - MINIO_SECRET_ACCESS_KEY=minioadmin
+      - MINIO_BUCKET=chunks
+      - HTTP_PORT=8081
+      - GRPC_PORT=9090
+    depends_on:
+      minio-6:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  storage-7:
+    build: ./storage
+    environment:
+      - MINIO_ENDPOINT=minio-7:9000
+      - MINIO_ACCESS_KEY_ID=minioadmin
+      - MINIO_SECRET_ACCESS_KEY=minioadmin
+      - MINIO_BUCKET=chunks
+      - HTTP_PORT=8081
+      - GRPC_PORT=9090
+    depends_on:
+      minio-7:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  storage-8:
+    build: ./storage
+    environment:
+      - MINIO_ENDPOINT=minio-8:9000
+      - MINIO_ACCESS_KEY_ID=minioadmin
+      - MINIO_SECRET_ACCESS_KEY=minioadmin
+      - MINIO_BUCKET=chunks
+      - HTTP_PORT=8081
+      - GRPC_PORT=9090
+    depends_on:
+      minio-8:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  storage-9:
+    build: ./storage
+    environment:
+      - MINIO_ENDPOINT=minio-9:9000
+      - MINIO_ACCESS_KEY_ID=minioadmin
+      - MINIO_SECRET_ACCESS_KEY=minioadmin
+      - MINIO_BUCKET=chunks
+      - HTTP_PORT=8081
+      - GRPC_PORT=9090
+    depends_on:
+      minio-9:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  storage-10:
+    build: ./storage
+    environment:
+      - MINIO_ENDPOINT=minio-10:9000
+      - MINIO_ACCESS_KEY_ID=minioadmin
+      - MINIO_SECRET_ACCESS_KEY=minioadmin
+      - MINIO_BUCKET=chunks
+      - HTTP_PORT=8081
+      - GRPC_PORT=9090
+    depends_on:
+      minio-10:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  minio-1:
+    image: minio/minio:latest
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data_1:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  minio-2:
+    image: minio/minio:latest
+    ports:
+      - "9002:9000"
+      - "9003:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data_2:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  minio-3:
+    image: minio/minio:latest
+    ports:
+      - "9004:9000"
+      - "9005:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data_3:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  minio-4:
+    image: minio/minio:latest
+    ports:
+      - "9006:9000"
+      - "9007:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data_4:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  minio-5:
+    image: minio/minio:latest
+    ports:
+      - "9008:9000"
+      - "9009:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data_5:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  minio-6:
+    image: minio/minio:latest
+    ports:
+      - "9010:9000"
+      - "9011:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data_6:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  minio-7:
+    image: minio/minio:latest
+    ports:
+      - "9012:9000"
+      - "9013:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data_7:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  minio-8:
+    image: minio/minio:latest
+    ports:
+      - "9014:9000"
+      - "9015:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data_8:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  minio-9:
+    image: minio/minio:latest
+    ports:
+      - "9016:9000"
+      - "9017:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data_9:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  minio-10:
+    image: minio/minio:latest
+    ports:
+      - "9018:9000"
+      - "9019:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    command: server /data --console-address ":9001"
+    volumes:
+      - minio_data_10:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=gateway_db
+      - POSTGRES_USER=gateway_user
+      - POSTGRES_PASSWORD=gateway_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gateway_user -d gateway_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+  minio_data_1:
+  minio_data_2:
+  minio_data_3:
+  minio_data_4:
+  minio_data_5:
+  minio_data_6:
+  minio_data_7:
+  minio_data_8:
+  minio_data_9:
+  minio_data_10:
